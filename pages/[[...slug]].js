@@ -13,6 +13,7 @@ export default function Page({ story, preview, socialtags, menu }) {
       "person.colorcode",
       "product.colorcode",
       "location.colorcode",
+      "reviews.colorcode",
       "artist.songs",
       "song.artist",
       "course.teachers",
