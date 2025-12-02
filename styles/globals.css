@@ -7,3 +7,12 @@ a {
 p img{
     max-width: 100%;
 }
+body, html {
+  min-height: 100%;
+  background-color: #f5f7fa;
+  /* of een afbeelding */
+  /* background-image: url('/images/bg.png'); */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
