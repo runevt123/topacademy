@@ -61,24 +61,34 @@ export default class ImageCarousel extends Component {
         this.checkDisplayedArrows(newPosition, cardWidth + cardMarginRight);
     }
 
-    scrollCarousel(invertDirection) {
-        const cardWidth = this.learningTargetsContainer.children[0].getBoundingClientRect().width;
-        const currentPosition = this.learningTargetsContainer.scrollLeft;
-        const cardMarginRight = Number(window.getComputedStyle(this.learningTargetsContainer.children[0]).marginRight.replace("px", ""));
-        const scrollInterval = cardWidth + cardMarginRight;
-        const newPosition = invertDirection ? Math.ceil((currentPosition - scrollInterval) / scrollInterval) * scrollInterval : Math.floor((currentPosition + scrollInterval) / scrollInterval) * scrollInterval;
+scrollCarousel(toLeft) {
+  const cardEl   = this.learningTargetsContainer.children[0];
+  const cardWidth = cardEl.getBoundingClientRect().width;
+  const marginRight = parseFloat(getComputedStyle(cardEl).marginRight);
+  const step = cardWidth + marginRight;
 
-        this.learningTargetsContainer.scroll({
-            left: newPosition,
-            top: 0,
-            behavior: "smooth"
-        });
-        this.checkDisplayedArrows(newPosition, scrollInterval);
-    }
+  const rawTarget = toLeft
+    ? this.learningTargetsContainer.scrollLeft - step
+    : this.learningTargetsContainer.scrollLeft + step;
 
+  // snap to the nearest card boundary
+  const target = Math.round(rawTarget / step) * step;
+
+  this.learningTargetsContainer.scrollTo({
+    left: target,
+    behavior: 'smooth'
+  });
+
+  setTimeout(() => {
+    this.checkDisplayedArrows(
+      this.learningTargetsContainer.scrollLeft,
+      step
+    );
+  }, 350);
+}
     checkDisplayedArrows(newPosition, scrollInterval) {
         if (document.body.clientWidth < 800) return;
-        this.setState({ showLeftArrow: (newPosition !== 0) });
+        this.setState({ showLeftArrow: newPosition > 1 });
         this.setState({ showRightArrow: (newPosition + scrollInterval < this.learningTargetsContainer.scrollWidth) });
     }
 
